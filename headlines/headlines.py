@@ -4,11 +4,30 @@ from flask import Flask
 
 app = Flask (__name__)
 
-RSS_FEED = "https://omgubuntu.co.uk/feed"
+RSS_FEEDS = {'OMG Ubuntu': 'https://omgubuntu.co.uk/feed',
+            'Sysdig': 'https://sysdig.com/feed/',
+            'Dicebreaker': 'https://www.dicebreaker.com/feed',
+            'Real Python': 'https://realpython.com/atom.xml'}
 
 @app.route("/")
-def get_news():
-  feed = feedparser.parse(RSS_FEED)
+@app.route("/omg")
+def omgubuntu():
+  return get_news('OMG Ubuntu')
+
+@app.route("/sysdig")
+def sysdig():
+  return get_news('Sysdig')
+
+@app.route("/dice")
+def dice():
+  return get_news('Dicebreaker')
+
+@app.route("/python")
+def python():
+  return get_news('Real Python')
+
+def get_news(publication):
+  feed = feedparser.parse(RSS_FEEDS[publication])
   first_article = feed['entries'][0]
   return """<html>
     <body>
