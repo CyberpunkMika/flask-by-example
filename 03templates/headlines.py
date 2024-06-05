@@ -18,7 +18,7 @@ RSS_FEEDS = {
 def get_news(publication="omgubuntu"):
     feed = feedparser.parse(RSS_FEEDS[publication])
     first_article = feed["entries"][0]
-    return render_template("home.html", article=first_article)
+    return render_template("home.html", articles=feed["entries"])
 
 
 @app.route("/favicon.ico")
