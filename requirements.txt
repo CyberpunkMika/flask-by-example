@@ -14,6 +14,7 @@ MarkupSafe==2.1.5
 mccabe==0.7.0
 platformdirs==4.2.2
 pylint==3.2.2
+python-dotenv==1.0.1
 requests==2.32.3
 sgmllib3k==1.0.0
 tomlkit==0.12.5
