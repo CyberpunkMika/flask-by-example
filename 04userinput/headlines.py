@@ -21,6 +21,34 @@ RSS_FEEDS = {
     "python": "https://realpython.com/atom.xml",
 }
 
+DEFAULTS = {"publication": "omgubuntu", "city": "London,UK"}
+
+
+@app.route("/")
+def home():
+    # get customized headlines, based on user input or default
+    publication = request.args.get("publication")
+    if not publication:
+        publication = DEFAULTS["publication"]
+    articles = get_news(publication)
+    # get customized weather based on user input or default
+    city = request.args.get("city")
+    if not city:
+        city = DEFAULTS["city"]
+    weather = get_weather(city)
+
+
+return render_template("home.html", articles=articles, weather=weather)
+
+
+def get_news(query):
+    if not query or query.lower() not in RSS_FEEDS:
+        publication = DEFAULTS["publication"]
+    else:
+        publication = query.lower()
+    feed = feedparser.parse(RSS_FEEDS[publication])
+    return feed["entries"]
+
 
 def get_weather(query):
     api_url = (
@@ -41,18 +69,6 @@ def get_weather(query):
             "city": parsed["name"],
         }
     return weather
-
-
-@app.route("/", methods=["GET", "POST"])
-def get_news():
-    query = request.form.get("publication")
-    if not query or query.lower() not in RSS_FEEDS:
-        publication = "omgubuntu"
-    else:
-        publication = query.lower()
-    feed = feedparser.parse(RSS_FEEDS[publication])
-    weather = get_weather("London,UK")
-    return render_template("home.html", articles=feed["entries"], weather=weather)
 
 
 if __name__ == "__main__":
