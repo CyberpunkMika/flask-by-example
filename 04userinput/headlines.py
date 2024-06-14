@@ -29,7 +29,9 @@ def get_weather(query):
     )
     query = urllib.parse.quote(query)
     url = api_url.format(query)
-    data = urlopen(url).read()
+    # data = urlopen(url).read()
+    with urlopen(url) as response:
+        data = response.read()
     parsed = json.loads(data)
     weather = None
     if parsed.get("weather"):
